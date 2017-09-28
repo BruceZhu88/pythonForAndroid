@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+ 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="file:///sdcard/sl4a/scripts/daveTest/css/bootstrap.min.css" />
+ 	<script src="file:///sdcard/sl4a/scripts/daveTest/js/bootstrap.min.js"></script>
+	
+	<script>
+	/* load the android api in javascipt. This is going to be used mainly to emit and receive events to / from the python script */
+      var droid = new Android();
+  /* Just like in the python script, we again need to listen for and take action on events. In this case below, 
+  we are listening for (via the registerCallback) an event called ¡°bluetoothOut¡± and using the data passed by 
+  the event (in the ¡°e.data¡± attribute) to fill out an html div. Note how the event name bluetoothOut is exactly 
+  the same as the one I¡¯ve defined in the python script above. Here we are communicating FROM python TO webview */
+	    droid.registerCallback('bluetoothOut', function(e) {
+                    document.getElementById('output').innerHTML = e.data;
+                });
+        </script>
+
+    </head>
+ 
+    <body>
+        <h1>Hello World</h1>
+        with SL4a Webviews<hr>
+        
+    <!-- Here we¡¯ll define a button which emits and event (via ¡°eventPost¡±) that¡¯s called ¡®sayHi¡¯ and contains the data ¡®Hi dude!¡¯. 
+    Again note that the event name is exactly the same as the one used in the python script. Here we are communicating FROM webview TO python-->
+        
+		<btn class="btn btn-primary" onclick="droid.eventPost('sayHi', 'Hi dude!')">Say Hi!</btn>
+	<hr>
+	
+	  <!-- Another event emission, this time to turn on bluetooth and start using it -->
+	  
+		<btn class="btn btn-primary" onclick="droid.eventPost('bluetooth', '')">Enable Bluetooth</btn>
+	<hr>
+	
+	  <!-- Last event to switch off our SL4A program -->
+		<btn class="btn btn-primary" onclick="droid.eventPost('kill', '')">BYE</btn>
+	<hr>
+	<h3>Here be bluetooth output (if enabled)</h3>
+	<div id="output"></div>
+    </body>
+</html>
